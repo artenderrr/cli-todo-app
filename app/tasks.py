@@ -1,9 +1,10 @@
+import os
 import json
 from json.decoder import JSONDecodeError
 
 class Tasks:
     def __init__(self):
-        self.file_path = "data/todos.json"
+        self.file_path = Tasks.get_file_path()
         self.items = self.load_items()
 
     def load_items(self):
@@ -15,6 +16,13 @@ class Tasks:
                 return valid_items
         except (FileNotFoundError, JSONDecodeError):
             return []
+    
+    @staticmethod
+    def get_file_path():
+        """ Generates an absolute path to the tasks file relative to this script directory """
+        script_path = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(script_path, "../data/todos.json")
+        return file_path
     
     @staticmethod
     def get_valid_items(items):
