@@ -3,7 +3,7 @@ from json.decoder import JSONDecodeError
 
 class Tasks:
     def __init__(self):
-        self.file_path = "data/todos.json"
+        self.file_path = "../data/todos.json"
         self.items = self.load_items()
 
     def load_items(self):
@@ -43,3 +43,17 @@ class Tasks:
         if not isinstance(item["done"], bool):
             return False
         return True
+    
+    def dump_items(self):
+        """ Dumps tasks to the file """
+        with open(self.file_path, "w") as f:
+            json.dump(self.items, f, indent=4)
+    
+    def add_item(self, name):
+        """ Adds new task with the given name to the list """
+        new_task = {
+            "name": name,
+            "done": False
+        }
+        self.items.append(new_task)
+        self.dump_items()
