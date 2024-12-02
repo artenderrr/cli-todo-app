@@ -1,0 +1,10 @@
+[
+    {
+        "name": "Buy groceries",
+        "done": true
+    },
+    {
+        "name": "Go to cafe",
+        "done": false
+    }
+]

@@ -11,3 +11,6 @@ build-backend = "setuptools.build_meta"
 
 [project.scripts]
 todos = "app.main:cli"
+
+[tool.setuptools.packages.find]
+include = ["app"]
