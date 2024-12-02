@@ -50,10 +50,17 @@ class Tasks:
             json.dump(self.items, f, indent=4)
     
     def add_item(self, name):
-        """ Adds new task with the given name to the list """
-        new_task = {
-            "name": name,
-            "done": False
-        }
-        self.items.append(new_task)
-        self.dump_items()
+        """ Adds new task with the given name to the list if the name is unique and returns completion status """
+        if not self.has_item_with_name(name):
+            new_task = {
+                "name": name,
+                "done": False
+            }
+            self.items.append(new_task)
+            self.dump_items()
+            return True
+        return False
+
+    def has_item_with_name(self, name):
+        """ Checks if task with given name already exists """
+        return next((True for i in self.items if i["name"] == name), False)
