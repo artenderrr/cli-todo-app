@@ -1,0 +1,13 @@
+[project]
+name = "cli-todo-app"
+version = "0.0.1"
+dependencies = [
+    "click"
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+todos = "app.main:cli"
