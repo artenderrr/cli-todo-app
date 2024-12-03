@@ -1,6 +1,12 @@
 [project]
 name = "cli-todo-app"
-version = "0.0.1"
+description = "Simple command-line tool for managing tasks"
+version = "1.0.0"
+authors = [
+    {name = "artenderrr"}
+]
+license = {text = "MIT"}
+requires-python = ">=3.12"
 dependencies = [
     "click"
 ]
@@ -10,7 +16,7 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project.scripts]
-todos = "app.main:cli"
+todos = "cli_todo_app.main:cli"
 
 [tool.setuptools.packages.find]
-include = ["app"]
+include = ["cli_todo_app"]

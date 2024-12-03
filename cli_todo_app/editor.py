@@ -1,5 +1,5 @@
 import click
-from app.tasks import Tasks
+from cli_todo_app.tasks import Tasks
 
 @click.command()
 @click.argument("name")

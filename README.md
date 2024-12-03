@@ -22,6 +22,10 @@ cd cli-todo-app
 
 # Install package with pip
 pip install .
+
+# (Optional) Delete unnecessary files
+cd ..
+rm -rf cli-todo-app
 ```
 
 # Usage

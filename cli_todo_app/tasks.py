@@ -21,7 +21,7 @@ class Tasks:
     def get_file_path():
         """ Generates an absolute path to the tasks file relative to this script directory """
         script_path = os.path.dirname(os.path.abspath(__file__))
-        file_path = os.path.join(script_path, "../data/todos.json")
+        file_path = os.path.join(script_path, "data/todos.json")
         return file_path
     
     @staticmethod

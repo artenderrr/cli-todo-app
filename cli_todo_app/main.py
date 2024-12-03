@@ -1,6 +1,6 @@
 import click
-from app.tasks import Tasks
-from app.editor import add, remove, done, undone
+from cli_todo_app.tasks import Tasks
+from cli_todo_app.editor import add, remove, done, undone
 
 def show_tasks():
     """ Shows a list of tasks sorted by completion status """
