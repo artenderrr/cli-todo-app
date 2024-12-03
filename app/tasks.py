@@ -96,3 +96,16 @@ class Tasks:
                     else:
                         return "already marked as done"
         return "task doesn't exist"
+    
+    def mark_item_not_done(self, name):
+        """ Marks task with the given name as not done and returns completion status """
+        if self.has_item_with_name(name):
+            for i in self.items:
+                if i["name"] == name:
+                    if i["done"]:
+                        i["done"] = False
+                        self.dump_items()
+                        return "marked as not done"
+                    else:
+                        return "already marked as not done"
+        return "task doesn't exist"

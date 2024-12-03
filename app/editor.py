@@ -32,3 +32,15 @@ def done(name):
         click.echo(f"Task with name \"{name}\" is already done")
     elif status == "task doesn't exist":
         click.echo(f"Task with name \"{name}\" doesn't exist")
+
+@click.command()
+@click.argument("name")
+def undone(name):
+    """ Sets task's status as not complete """
+    status = Tasks().mark_item_not_done(name)
+    if status == "marked as not done":
+        click.echo(f"Undone task with name \"{name}\"")
+    elif status == "already marked as not done":
+        click.echo(f"Task with name \"{name}\" is not done yet")
+    elif status == "task doesn't exist":
+        click.echo(f"Task with name \"{name}\" doesn't exist")
