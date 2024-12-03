@@ -1,6 +1,6 @@
 import click
 from app.tasks import Tasks
-from app.editor import add, remove
+from app.editor import add, remove, done
 
 def show_tasks():
     """ Shows a list of tasks sorted by completion status """
@@ -20,3 +20,4 @@ def cli(ctx):
 
 cli.add_command(add)
 cli.add_command(remove)
+cli.add_command(done)

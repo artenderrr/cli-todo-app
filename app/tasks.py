@@ -83,3 +83,16 @@ class Tasks:
             self.dump_items()
             return True
         return False
+    
+    def mark_item_done(self, name):
+        """ Marks task with the given name as done and returns completion status """
+        if self.has_item_with_name(name):
+            for i in self.items:
+                if i["name"] == name:
+                    if not i["done"]:
+                        i["done"] = True
+                        self.dump_items()
+                        return "marked as done"
+                    else:
+                        return "already marked as done"
+        return "task doesn't exist"
