@@ -72,3 +72,14 @@ class Tasks:
     def has_item_with_name(self, name):
         """ Checks if task with given name already exists """
         return next((True for i in self.items if i["name"] == name), False)
+    
+    def remove_item(self, name):
+        """ Removes task with the given name from the list if it exists and returns completion status """
+        if self.has_item_with_name(name):
+            for i in range(len(self.items)):
+                if self.items[i]["name"] == name:
+                    self.items.pop(i)
+                    break
+            self.dump_items()
+            return True
+        return False
