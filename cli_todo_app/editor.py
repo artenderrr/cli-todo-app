@@ -1,13 +1,21 @@
 import click
 from click.exceptions import UsageError
+from functools import wraps
 from cli_todo_app.tasks import Tasks
+
+def validate_names_presence(func):
+    @wraps(func)
+    def wrapper(names):
+        if not names:
+            raise UsageError("Missing argument 'NAMES'.")
+        func(names)
+    return wrapper
 
 @click.command()
 @click.argument("names", nargs=-1)
+@validate_names_presence
 def add(names):
     """ Add new tasks to the list """
-    if not names:
-        raise UsageError("Missing argument 'NAMES'.")
     for name in names:
         success = Tasks().add_item(name)
         if success:
@@ -17,10 +25,9 @@ def add(names):
 
 @click.command()
 @click.argument("names", nargs=-1)
+@validate_names_presence
 def remove(names):
     """ Removes existing tasks from the list """
-    if not names:
-        raise UsageError("Missing argument 'NAMES'.")
     for name in names:
         success = Tasks().remove_item(name)
         if success:
@@ -30,10 +37,9 @@ def remove(names):
 
 @click.command()
 @click.argument("names", nargs=-1)
+@validate_names_presence
 def done(names):
     """ Sets task's status as complete """
-    if not names:
-        raise UsageError("Missing argument 'NAMES'.")
     for name in names:
         status = Tasks().mark_item_done(name)
         if status == "marked as done":
@@ -45,10 +51,9 @@ def done(names):
 
 @click.command()
 @click.argument("names", nargs=-1)
+@validate_names_presence
 def undone(names):
     """ Sets task's status as not complete """
-    if not names:
-        raise UsageError("Missing argument 'NAMES'.")
     for name in names:
         status = Tasks().mark_item_not_done(name)
         if status == "marked as not done":
