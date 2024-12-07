@@ -1,15 +1,19 @@
 import click
+from click.exceptions import UsageError
 from cli_todo_app.tasks import Tasks
 
 @click.command()
-@click.argument("name")
-def add(name):
-    """ Add new task to the list """
-    success = Tasks().add_item(name)
-    if success:
-        click.echo(f"Added new task with name \"{name}\"")
-    else:
-        click.echo(f"Task with name \"{name}\" already exists")
+@click.argument("names", nargs=-1)
+def add(names):
+    """ Add new tasks to the list """
+    if not names:
+        raise UsageError("Missing argument 'NAMES'.")
+    for name in names:
+        success = Tasks().add_item(name)
+        if success:
+            click.echo(f"Added new task with name \"{name}\"")
+        else:
+            click.echo(f"Task with name \"{name}\" already exists")
 
 @click.command()
 @click.argument("name")
