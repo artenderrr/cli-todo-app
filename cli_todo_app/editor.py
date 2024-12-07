@@ -29,25 +29,31 @@ def remove(names):
             click.echo(f"Task with name \"{name}\" doesn't exist")
 
 @click.command()
-@click.argument("name")
-def done(name):
+@click.argument("names", nargs=-1)
+def done(names):
     """ Sets task's status as complete """
-    status = Tasks().mark_item_done(name)
-    if status == "marked as done":
-        click.echo(f"Done task with name \"{name}\"")
-    elif status == "already marked as done":
-        click.echo(f"Task with name \"{name}\" is already done")
-    elif status == "task doesn't exist":
-        click.echo(f"Task with name \"{name}\" doesn't exist")
+    if not names:
+        raise UsageError("Missing argument 'NAMES'.")
+    for name in names:
+        status = Tasks().mark_item_done(name)
+        if status == "marked as done":
+            click.echo(f"Done task with name \"{name}\"")
+        elif status == "already marked as done":
+            click.echo(f"Task with name \"{name}\" is already done")
+        elif status == "task doesn't exist":
+            click.echo(f"Task with name \"{name}\" doesn't exist")
 
 @click.command()
-@click.argument("name")
-def undone(name):
+@click.argument("names", nargs=-1)
+def undone(names):
     """ Sets task's status as not complete """
-    status = Tasks().mark_item_not_done(name)
-    if status == "marked as not done":
-        click.echo(f"Undone task with name \"{name}\"")
-    elif status == "already marked as not done":
-        click.echo(f"Task with name \"{name}\" is not done yet")
-    elif status == "task doesn't exist":
-        click.echo(f"Task with name \"{name}\" doesn't exist")
+    if not names:
+        raise UsageError("Missing argument 'NAMES'.")
+    for name in names:
+        status = Tasks().mark_item_not_done(name)
+        if status == "marked as not done":
+            click.echo(f"Undone task with name \"{name}\"")
+        elif status == "already marked as not done":
+            click.echo(f"Task with name \"{name}\" is not done yet")
+        elif status == "task doesn't exist":
+            click.echo(f"Task with name \"{name}\" doesn't exist")
