@@ -16,14 +16,17 @@ def add(names):
             click.echo(f"Task with name \"{name}\" already exists")
 
 @click.command()
-@click.argument("name")
-def remove(name):
-    """ Removes existing task from the list """
-    success = Tasks().remove_item(name)
-    if success:
-        click.echo(f"Removed task with name \"{name}\"")
-    else:
-        click.echo(f"Task with name \"{name}\" doesn't exist")
+@click.argument("names", nargs=-1)
+def remove(names):
+    """ Removes existing tasks from the list """
+    if not names:
+        raise UsageError("Missing argument 'NAMES'.")
+    for name in names:
+        success = Tasks().remove_item(name)
+        if success:
+            click.echo(f"Removed task with name \"{name}\"")
+        else:
+            click.echo(f"Task with name \"{name}\" doesn't exist")
 
 @click.command()
 @click.argument("name")
