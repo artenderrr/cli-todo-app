@@ -40,11 +40,5 @@ def done(names):
 @validate_names_presence
 def undone(names):
     """ Sets task's status as not complete """
-    for name in names:
-        status = Tasks().mark_item_not_done(name)
-        if status == "marked as not done":
-            click.echo(f"Undone task with name \"{name}\"")
-        elif status == "already marked as not done":
-            click.echo(f"Task with name \"{name}\" is not done yet")
-        elif status == "task doesn't exist":
-            click.echo(f"Task with name \"{name}\" doesn't exist")
+    response = Tasks().mark_items_not_done(names)
+    response.show()
