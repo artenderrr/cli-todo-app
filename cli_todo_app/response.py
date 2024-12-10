@@ -12,6 +12,21 @@ class ResponseBlock:
     def __init__(self, name, tasks):
         self.name = name
         self.tasks = tasks
+        self.HEADERS = {
+            "added": ("Added this task", "Added these tasks"),
+            "removed": ("Removed this task", "Removed these tasks"),
+            "done": ("Done this task", "Done these tasks"),
+            "undone": ("Undone this task", "Undone these tasks"),
+            "already exist": ("This task already exists", "These tasks already exist"),
+            "don't exist": ("This task doesn't exist", "These tasks don't exist"),
+            "already done": ("This task is already done", "These tasks are already done"),
+            "already undone": ("This task is not done yet", "These tasks are not done yet")
+        }
+        self.COLORS = {
+            "green": ("added", "removed", "done", "undone"),
+            "yellow": ("already done", "already undone"),
+            "red": ("already exist", "don't exist")
+        }
     
     def show(self):
         if self.tasks:
@@ -24,30 +39,10 @@ class ResponseBlock:
 
     @property
     def header(self):
-        if self.name == "added":
-            header = "Added these tasks" if len(self.tasks) > 1 else "Added this task"
-        elif self.name == "already exist":
-            header = "These tasks already exist" if len(self.tasks) > 1 else "This task already exists"
-        elif self.name == "removed":
-            header = "Removed these tasks" if len(self.tasks) > 1 else "Removed this task"
-        elif self.name == "don't exist":
-            header = "These tasks don't exist" if len(self.tasks) > 1 else "This task doesn't exist"
-        elif self.name == "done":
-            header = "Done these tasks" if len(self.tasks) > 1 else "Done this task"
-        elif self.name == "already done":
-            header = "These tasks are already done" if len(self.tasks) > 1 else "This task is already done"
-        elif self.name == "undone":
-            header = "Undone these tasks" if len(self.tasks) > 1 else "Undone this task"
-        elif self.name == "already undone":
-            header = "These tasks are not done yet" if len(self.tasks) > 1 else "This task is not done yet"
-        return header
+        return self.HEADERS[self.name][len(self.tasks) > 1]
     
     @property
     def color(self):
-        if self.name in ("added", "removed", "done", "undone"):
-            color = "green"
-        elif self.name in ("already done", "already undone"):
-            color = "yellow"
-        elif self.name in ("already exist", "don't exist"):
-            color = "red"
-        return color
+        for color, group in self.COLORS.items():
+            if self.name in group:
+                return color
