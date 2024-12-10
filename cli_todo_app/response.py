@@ -32,12 +32,18 @@ class ResponseBlock:
             header = "Removed these tasks" if len(self.tasks) > 1 else "Removed this task"
         elif self.name == "don't exist":
             header = "These tasks don't exist" if len(self.tasks) > 1 else "This task doesn't exist"
+        elif self.name == "done":
+            header = "Done these tasks" if len(self.tasks) > 1 else "Done this task"
+        elif self.name == "already done":
+            header = "These tasks are already done" if len(self.tasks) > 1 else "This task is already done"
         return header
     
     @property
     def color(self):
-        if self.name in ("added", "removed"):
+        if self.name in ("added", "removed", "done"):
             color = "green"
+        elif self.name in ("already done",):
+            color = "yellow"
         elif self.name in ("already_exist", "don't exist"):
             color = "red"
         return color

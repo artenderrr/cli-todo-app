@@ -32,14 +32,8 @@ def remove(names):
 @validate_names_presence
 def done(names):
     """ Sets task's status as complete """
-    for name in names:
-        status = Tasks().mark_item_done(name)
-        if status == "marked as done":
-            click.echo(f"Done task with name \"{name}\"")
-        elif status == "already marked as done":
-            click.echo(f"Task with name \"{name}\" is already done")
-        elif status == "task doesn't exist":
-            click.echo(f"Task with name \"{name}\" doesn't exist")
+    response = Tasks().mark_items_done(names)
+    response.show()
 
 @click.command()
 @click.argument("names", nargs=-1)

@@ -109,10 +109,18 @@ class Tasks:
                     if not i["done"]:
                         i["done"] = True
                         self.dump_items()
-                        return "marked as done"
+                        return "done"
                     else:
-                        return "already marked as done"
-        return "task doesn't exist"
+                        return "already done"
+        return "don't exist"
+    
+    def mark_items_done(self, names):
+        """ Marks tasks as done using .mark_item_done() for each name from given ones and returns Response object"""
+        response = {"done": [], "already done": [], "don't exist": []}
+        for name in set(names):
+            status = self.mark_item_done(name)
+            response[status].append(name)
+        return Response(response)
     
     def mark_item_not_done(self, name):
         """ Marks task with the given name as not done and returns completion status """
