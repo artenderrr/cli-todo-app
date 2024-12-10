@@ -93,6 +93,14 @@ class Tasks:
             return True
         return False
     
+    def remove_items(self, names):
+        """ Removes tasks using .remove_item() for each name from given ones and returns Response object """
+        response = {"removed": [], "don't exist": []}
+        for name in set(names):
+            success = self.remove_item(name)
+            response["removed" if success else "don't exist"].append(name)
+        return Response(response)
+    
     def mark_item_done(self, name):
         """ Marks task with the given name as done and returns completion status """
         if self.has_item_with_name(name):

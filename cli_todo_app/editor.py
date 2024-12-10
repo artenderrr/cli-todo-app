@@ -24,12 +24,8 @@ def add(names):
 @validate_names_presence
 def remove(names):
     """ Removes existing tasks from the list """
-    for name in names:
-        success = Tasks().remove_item(name)
-        if success:
-            click.echo(f"Removed task with name \"{name}\"")
-        else:
-            click.echo(f"Task with name \"{name}\" doesn't exist")
+    response = Tasks().remove_items(names)
+    response.show()
 
 @click.command()
 @click.argument("names", nargs=-1)
