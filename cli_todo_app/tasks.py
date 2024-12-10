@@ -1,7 +1,6 @@
 import os
 import json
 from json.decoder import JSONDecodeError
-from cli_todo_app.response import Response
 
 class Tasks:
     def __init__(self):
@@ -76,7 +75,7 @@ class Tasks:
         for name in set(names):
             success = self.add_item(name)
             response["added" if success else "already exist"].append(name)
-        return Response(response)
+        return response
 
     def has_item_with_name(self, name):
         """ Checks if task with given name already exists """
@@ -99,7 +98,7 @@ class Tasks:
         for name in set(names):
             success = self.remove_item(name)
             response["removed" if success else "don't exist"].append(name)
-        return Response(response)
+        return response
     
     def mark_item_done(self, name):
         """ Marks task with the given name as done and returns completion status """
@@ -120,7 +119,7 @@ class Tasks:
         for name in set(names):
             status = self.mark_item_done(name)
             response[status].append(name)
-        return Response(response)
+        return response
     
     def mark_item_not_done(self, name):
         """ Marks task with the given name as not done and returns completion status """
@@ -141,4 +140,4 @@ class Tasks:
         for name in set(names):
             status = self.mark_item_not_done(name)
             response[status].append(name)
-        return Response(response)
+        return response
