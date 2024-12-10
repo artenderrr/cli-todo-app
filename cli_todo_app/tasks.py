@@ -1,6 +1,7 @@
 import os
 import json
 from json.decoder import JSONDecodeError
+from cli_todo_app.response import Response
 
 class Tasks:
     def __init__(self):
@@ -68,6 +69,14 @@ class Tasks:
             self.dump_items()
             return True
         return False
+    
+    def add_items(self, names):
+        """ Adds new tasks using .add_item() for each name from given ones and returns response with metadata """
+        response = {"added": [], "already_exist": []}
+        for name in set(names):
+            success = self.add_item(name)
+            response["added" if success else "already_exist"].append(name)
+        return Response(response)
 
     def has_item_with_name(self, name):
         """ Checks if task with given name already exists """

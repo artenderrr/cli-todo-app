@@ -16,12 +16,8 @@ def validate_names_presence(func):
 @validate_names_presence
 def add(names):
     """ Add new tasks to the list """
-    for name in names:
-        success = Tasks().add_item(name)
-        if success:
-            click.echo(f"Added new task with name \"{name}\"")
-        else:
-            click.echo(f"Task with name \"{name}\" already exists")
+    response = Tasks().add_items(names)
+    response.show()
 
 @click.command()
 @click.argument("names", nargs=-1)
