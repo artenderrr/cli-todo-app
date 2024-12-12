@@ -159,3 +159,9 @@ class Tasks:
             status = self.mark_item_not_done(name)
             response[status].append(name)
         return response
+    
+    def mark_all_items_not_done(self):
+        """ Marks all tasks as not done using .mark_items_not_done() and returns Response object """
+        all_item_names = [i["name"] for i in self.items]
+        response = self.mark_items_not_done(all_item_names)
+        return response

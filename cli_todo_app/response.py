@@ -11,7 +11,7 @@ class Response:
     @staticmethod
     def handle_edge_cases(func):
         def wrapper(self):
-            if self.context in ("remove_all_tasks", "done_all_tasks") and self.is_empty():
+            if self.context in ("remove_all_tasks", "done_all_tasks", "undone_all_tasks") and self.is_empty():
                 click.echo("You don't have any tasks yet.")
             elif self.context == "remove_done_tasks" and self.is_empty():
                 click.echo("You haven't done any tasks yet.")
@@ -20,6 +20,11 @@ class Response:
                 not self.blocks.get("done", None) and self.blocks.get("already done", None)
                 ):
                 click.echo("All tasks are already done.")
+            elif (self.context == "undone_all_tasks"
+                  and
+                  not self.blocks.get("undone", None) and self.blocks.get("already undone", None)
+                  ):
+                click.echo("You haven't done any tasks yet.")
             else:
                 func(self)
         return wrapper

@@ -64,9 +64,14 @@ def done(names, all_tasks):
 
 @click.command()
 @click.argument("names", nargs=-1)
+@click.option("-a", "--all", "all_tasks", is_flag=True, default=False)
 @validate_parameters
-def undone(names):
+def undone(names, all_tasks):
     """ Sets task's status as not complete """
-    response_data = Tasks().mark_items_not_done(names)
-    response = Response(response_data)
+    context = get_context("undone", locals())
+    if all_tasks:
+        response_data = Tasks().mark_all_items_not_done()
+    elif names:
+        response_data = Tasks().mark_items_not_done(names)
+    response = Response(response_data, context)
     response.show()
