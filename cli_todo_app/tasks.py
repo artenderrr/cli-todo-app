@@ -7,6 +7,10 @@ class Tasks:
         self.file_path = Tasks.get_file_path()
         self.items = self.load_items()
 
+    @property
+    def all_item_names(self):
+        return [i["name"] for i in self.items]
+
     def load_items(self):
         """ Loads tasks from file and returns them as a list of dictionaries """
         try:
@@ -102,8 +106,7 @@ class Tasks:
     
     def remove_all_items(self):
         """ Removes all tasks using .remote_items() and returns Response object """
-        all_item_names = [i["name"] for i in self.items]
-        response = self.remove_items(all_item_names)
+        response = self.remove_items(self.all_item_names)
         return response
     
     def remove_done_items(self):
@@ -135,8 +138,7 @@ class Tasks:
     
     def mark_all_items_done(self):
         """ Marks all tasks as done using .mark_items_done() and return Response object """
-        all_item_names = [i["name"] for i in self.items]
-        response = self.mark_items_done(all_item_names)
+        response = self.mark_items_done(self.all_item_names)
         return response
     
     def mark_item_not_done(self, name):
@@ -162,6 +164,5 @@ class Tasks:
     
     def mark_all_items_not_done(self):
         """ Marks all tasks as not done using .mark_items_not_done() and returns Response object """
-        all_item_names = [i["name"] for i in self.items]
-        response = self.mark_items_not_done(all_item_names)
+        response = self.mark_items_not_done(self.all_item_names)
         return response
