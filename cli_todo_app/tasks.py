@@ -106,6 +106,12 @@ class Tasks:
         response = self.remove_items(all_item_names)
         return response
     
+    def remove_done_items(self):
+        """ Removes all tasks that are marked as done using .remove_items() and returns Response object """
+        done_item_names = [i["name"] for i in self.items if i["done"]]
+        response = self.remove_items(done_item_names)
+        return response
+    
     def mark_item_done(self, name):
         """ Marks task with the given name as done and returns completion status """
         if self.has_item_with_name(name):

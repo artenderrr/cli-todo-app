@@ -29,11 +29,14 @@ def add(names):
 @click.command()
 @click.argument("names", nargs=-1)
 @click.option("-a", "--all", "all_tasks", is_flag=True, default=False)
+@click.option("-d", "--done", "done_tasks", is_flag=True, default=False)
 @validate_parameters
-def remove(names, all_tasks):
+def remove(names, all_tasks, done_tasks):
     """ Removes existing tasks from the list """
     if all_tasks:
         response_data = Tasks().remove_all_items()
+    elif done_tasks:
+        response_data = Tasks().remove_done_items()
     elif names:
         response_data = Tasks().remove_items(names)
     response = Response(response_data)
