@@ -133,6 +133,12 @@ class Tasks:
             response[status].append(name)
         return response
     
+    def mark_all_items_done(self):
+        """ Marks all tasks as done using .mark_items_done() and return Response object """
+        all_item_names = [i["name"] for i in self.items]
+        response = self.mark_items_done(all_item_names)
+        return response
+    
     def mark_item_not_done(self, name):
         """ Marks task with the given name as not done and returns completion status """
         if self.has_item_with_name(name):

@@ -50,11 +50,16 @@ def remove(names, all_tasks, done_tasks):
 
 @click.command()
 @click.argument("names", nargs=-1)
+@click.option("-a", "--all", "all_tasks", is_flag=True, default=False)
 @validate_parameters
-def done(names):
+def done(names, all_tasks):
     """ Sets task's status as complete """
-    response_data = Tasks().mark_items_done(names)
-    response = Response(response_data)
+    context = get_context("done", locals())
+    if all_tasks:
+        response_data = Tasks().mark_all_items_done()
+    elif names:
+        response_data = Tasks().mark_items_done(names)
+    response = Response(response_data, context)
     response.show()
 
 @click.command()

@@ -5,12 +5,16 @@ class Response:
         self.blocks = [ResponseBlock(group, tasks) for group, tasks in data.items()]
         self.context = context
 
+    def is_empty(self):
+        return all(block.is_empty() for block in self.blocks)
+
     def show(self):
-        if all(block.is_empty() for block in self.blocks):
-            if self.context == "remove_all_tasks":
-                click.echo("You don't have any tasks yet.")
-            elif self.context == "remove_done_tasks":
-                click.echo("You haven't done any tasks yet.")
+        if self.context in ("remove_all_tasks", "done_all_tasks") and self.is_empty():
+            click.echo("You don't have any tasks yet.")
+        elif self.context == "remove_done_tasks" and self.is_empty():
+            click.echo("You haven't done any tasks yet.")
+        elif self.context == "done_all_tasks" and self.blocks[0].is_empty() and not self.blocks[1].is_empty():
+            click.echo("All tasks are already done.")
         else:
             for block in self.blocks:
                 block.show()
