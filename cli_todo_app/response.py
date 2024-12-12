@@ -2,22 +2,32 @@ import click
 
 class Response:
     def __init__(self, data, context=None):
-        self.blocks = [ResponseBlock(group, tasks) for group, tasks in data.items()]
+        self.blocks = {group: ResponseBlock(group, tasks) for group, tasks in data.items() if tasks}
         self.context = context
 
     def is_empty(self):
-        return all(block.is_empty() for block in self.blocks)
+        return len(self.blocks) == 0
 
+    @staticmethod
+    def handle_edge_cases(func):
+        def wrapper(self):
+            if self.context in ("remove_all_tasks", "done_all_tasks") and self.is_empty():
+                click.echo("You don't have any tasks yet.")
+            elif self.context == "remove_done_tasks" and self.is_empty():
+                click.echo("You haven't done any tasks yet.")
+            elif (self.context == "done_all_tasks"
+                and
+                not self.blocks.get("done", None) and self.blocks.get("already done", None)
+                ):
+                click.echo("All tasks are already done.")
+            else:
+                func(self)
+        return wrapper
+    
+    @handle_edge_cases
     def show(self):
-        if self.context in ("remove_all_tasks", "done_all_tasks") and self.is_empty():
-            click.echo("You don't have any tasks yet.")
-        elif self.context == "remove_done_tasks" and self.is_empty():
-            click.echo("You haven't done any tasks yet.")
-        elif self.context == "done_all_tasks" and self.blocks[0].is_empty() and not self.blocks[1].is_empty():
-            click.echo("All tasks are already done.")
-        else:
-            for block in self.blocks:
-                block.show()
+        for block in self.blocks.values():
+            block.show()
 
 class ResponseBlock:
     def __init__(self, name, tasks):
@@ -47,9 +57,6 @@ class ResponseBlock:
     def show_tasks(self):
         for task in sorted(self.tasks):
             click.secho(" " * 4 + task, fg=self.color)
-    
-    def is_empty(self):
-        return len(self.tasks) == 0
 
     @property
     def header(self):
