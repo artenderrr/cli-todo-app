@@ -1,11 +1,40 @@
 import click
 
 class Response:
-    def __init__(self, data):
-        self.blocks = [ResponseBlock(group, tasks) for group, tasks in data.items()]
+    def __init__(self, data, context=None):
+        self.blocks = {group: ResponseBlock(group, tasks) for group, tasks in data.items() if tasks}
+        self.context = context
 
+    def is_empty(self):
+        return len(self.blocks) == 0
+
+    @staticmethod
+    def handle_edge_cases(func):
+        def wrapper(self):
+            if self.context in ("remove_all_tasks", "done_all_tasks", "undone_all_tasks") and self.is_empty():
+                click.echo("You don't have any tasks yet.")
+            elif self.context == "remove_done_tasks" and self.is_empty():
+                click.echo("You haven't done any tasks yet.")
+            elif self.context == "done_all_tasks" and not self.blocks.get("done", None):
+                click.echo("All tasks are already done.")
+            elif self.context == "undone_all_tasks" and not self.blocks.get("undone", None):
+                click.echo("You haven't done any tasks yet.")
+            else:
+                func(self)
+        return wrapper
+    
+    def should_skip_block(self, block):
+        return (
+            block.name == "already done" and self.context == "done_all_tasks"
+            or
+            block.name == "already undone" and self.context == "undone_all_tasks"
+        )
+    
+    @handle_edge_cases
     def show(self):
-        for block in self.blocks:
+        for block in self.blocks.values():
+            if self.should_skip_block(block):
+                continue
             block.show()
 
 class ResponseBlock:

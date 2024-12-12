@@ -32,11 +32,11 @@ rm -rf cli-todo-app
 
 ## Managing Single Task
 ```bash
-todos # View a list of tasks
+todos                      # View a list of tasks
 
-todos add "Brew coffee" # Add a new task
+todos add "Brew coffee"    # Add a new task
 
-todos done "Brew coffee" # Mark a task as done
+todos done "Brew coffee"   # Mark a task as done
 
 todos undone "Brew coffee" # Mark a task as not done
 
@@ -55,6 +55,22 @@ todos undone "Code" "Rest"
 todos remove "Code" "Eat"
 ```
 * **Note**: You can manage as many tasks at the same time as you want!
+
+## Managing Tasks Using Flags
+```bash
+todos remove --all  # Remove all tasks
+
+todos remove -a     # Short form of --all
+
+todos remove --done # Remove all done tasks
+
+todos remove -d     # Short form of --done
+
+todos done --all    # Mark all tasks as done
+
+todos done -a       # Short form of --all
+```
+* **Note**: The flags `-a` and `--all` can also be used with the `todos undone` command to mark all tasks as undone.
 
 # License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
