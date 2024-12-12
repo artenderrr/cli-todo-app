@@ -17,6 +17,11 @@ def validate_parameters(func):
         func(**kwargs)
     return wrapper
 
+def get_context(command, parameters):
+    specified_parameter = next(parameter for parameter, value in parameters.items() if value)
+    context = f"{command}_{specified_parameter}"
+    return context
+
 @click.command()
 @click.argument("names", nargs=-1)
 @validate_parameters
@@ -33,13 +38,14 @@ def add(names):
 @validate_parameters
 def remove(names, all_tasks, done_tasks):
     """ Removes existing tasks from the list """
+    context = get_context("remove", locals())
     if all_tasks:
         response_data = Tasks().remove_all_items()
     elif done_tasks:
         response_data = Tasks().remove_done_items()
     elif names:
         response_data = Tasks().remove_items(names)
-    response = Response(response_data)
+    response = Response(response_data, context)
     response.show()
 
 @click.command()

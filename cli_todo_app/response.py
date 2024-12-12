@@ -1,12 +1,19 @@
 import click
 
 class Response:
-    def __init__(self, data):
+    def __init__(self, data, context=None):
         self.blocks = [ResponseBlock(group, tasks) for group, tasks in data.items()]
+        self.context = context
 
     def show(self):
-        for block in self.blocks:
-            block.show()
+        if all(block.is_empty() for block in self.blocks):
+            if self.context == "remove_all_tasks":
+                click.echo("You don't have any tasks yet.")
+            elif self.context == "remove_done_tasks":
+                click.echo("You haven't done any tasks yet.")
+        else:
+            for block in self.blocks:
+                block.show()
 
 class ResponseBlock:
     def __init__(self, name, tasks):
@@ -36,6 +43,9 @@ class ResponseBlock:
     def show_tasks(self):
         for task in sorted(self.tasks):
             click.secho(" " * 4 + task, fg=self.color)
+    
+    def is_empty(self):
+        return len(self.tasks) == 0
 
     @property
     def header(self):
