@@ -4,7 +4,7 @@ from cli_todo_app.editor import add, remove, done, undone
 
 def show_tasks():
     """ Shows a list of tasks sorted by completion status """
-    tasks = sorted(Tasks().items, key=lambda task: task["done"])
+    tasks = sorted(Tasks().items, key=lambda task: (task["done"], task["name"]))
     if tasks:
         for task in tasks:
             click.echo(f"[{"x" if task["done"] else " "}] {task["name"]}")

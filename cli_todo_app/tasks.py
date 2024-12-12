@@ -68,6 +68,14 @@ class Tasks:
             self.dump_items()
             return True
         return False
+    
+    def add_items(self, names):
+        """ Adds new tasks using .add_item() for each name from given ones and returns response with metadata """
+        response = {"added": [], "already exist": []}
+        for name in set(names):
+            success = self.add_item(name)
+            response["added" if success else "already exist"].append(name)
+        return response
 
     def has_item_with_name(self, name):
         """ Checks if task with given name already exists """
@@ -84,6 +92,14 @@ class Tasks:
             return True
         return False
     
+    def remove_items(self, names):
+        """ Removes tasks using .remove_item() for each name from given ones and returns Response object """
+        response = {"removed": [], "don't exist": []}
+        for name in set(names):
+            success = self.remove_item(name)
+            response["removed" if success else "don't exist"].append(name)
+        return response
+    
     def mark_item_done(self, name):
         """ Marks task with the given name as done and returns completion status """
         if self.has_item_with_name(name):
@@ -92,10 +108,18 @@ class Tasks:
                     if not i["done"]:
                         i["done"] = True
                         self.dump_items()
-                        return "marked as done"
+                        return "done"
                     else:
-                        return "already marked as done"
-        return "task doesn't exist"
+                        return "already done"
+        return "don't exist"
+    
+    def mark_items_done(self, names):
+        """ Marks tasks as done using .mark_item_done() for each name from given ones and returns Response object"""
+        response = {"done": [], "already done": [], "don't exist": []}
+        for name in set(names):
+            status = self.mark_item_done(name)
+            response[status].append(name)
+        return response
     
     def mark_item_not_done(self, name):
         """ Marks task with the given name as not done and returns completion status """
@@ -105,7 +129,15 @@ class Tasks:
                     if i["done"]:
                         i["done"] = False
                         self.dump_items()
-                        return "marked as not done"
+                        return "undone"
                     else:
-                        return "already marked as not done"
-        return "task doesn't exist"
+                        return "already undone"
+        return "don't exist"
+    
+    def mark_items_not_done(self, names):
+        """ Marks tasks as not done using .mark_item_not_done() for each name from given ones and returns Response object"""
+        response = {"undone": [], "already undone": [], "don't exist": []}
+        for name in set(names):
+            status = self.mark_item_not_done(name)
+            response[status].append(name)
+        return response

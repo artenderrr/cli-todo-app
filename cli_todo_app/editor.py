@@ -2,6 +2,7 @@ import click
 from click.exceptions import UsageError
 from functools import wraps
 from cli_todo_app.tasks import Tasks
+from cli_todo_app.response import Response
 
 def validate_names_presence(func):
     @wraps(func)
@@ -16,49 +17,33 @@ def validate_names_presence(func):
 @validate_names_presence
 def add(names):
     """ Add new tasks to the list """
-    for name in names:
-        success = Tasks().add_item(name)
-        if success:
-            click.echo(f"Added new task with name \"{name}\"")
-        else:
-            click.echo(f"Task with name \"{name}\" already exists")
+    response_data = Tasks().add_items(names)
+    response = Response(response_data)
+    response.show()
 
 @click.command()
 @click.argument("names", nargs=-1)
 @validate_names_presence
 def remove(names):
     """ Removes existing tasks from the list """
-    for name in names:
-        success = Tasks().remove_item(name)
-        if success:
-            click.echo(f"Removed task with name \"{name}\"")
-        else:
-            click.echo(f"Task with name \"{name}\" doesn't exist")
+    response_data = Tasks().remove_items(names)
+    response = Response(response_data)
+    response.show()
 
 @click.command()
 @click.argument("names", nargs=-1)
 @validate_names_presence
 def done(names):
     """ Sets task's status as complete """
-    for name in names:
-        status = Tasks().mark_item_done(name)
-        if status == "marked as done":
-            click.echo(f"Done task with name \"{name}\"")
-        elif status == "already marked as done":
-            click.echo(f"Task with name \"{name}\" is already done")
-        elif status == "task doesn't exist":
-            click.echo(f"Task with name \"{name}\" doesn't exist")
+    response_data = Tasks().mark_items_done(names)
+    response = Response(response_data)
+    response.show()
 
 @click.command()
 @click.argument("names", nargs=-1)
 @validate_names_presence
 def undone(names):
     """ Sets task's status as not complete """
-    for name in names:
-        status = Tasks().mark_item_not_done(name)
-        if status == "marked as not done":
-            click.echo(f"Undone task with name \"{name}\"")
-        elif status == "already marked as not done":
-            click.echo(f"Task with name \"{name}\" is not done yet")
-        elif status == "task doesn't exist":
-            click.echo(f"Task with name \"{name}\" doesn't exist")
+    response_data = Tasks().mark_items_not_done(names)
+    response = Response(response_data)
+    response.show()
