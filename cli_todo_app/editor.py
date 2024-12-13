@@ -9,11 +9,11 @@ def validate_parameters(func):
     def wrapper(**kwargs):
         specified = len([*filter(None, kwargs.values())])
         if len(kwargs) == 1 and not kwargs["names"]:
-            raise UsageError("Missing argument 'NAMES'")
+            raise UsageError("Missing argument 'NAMES'.")
         elif len(kwargs) > 1 and not specified:
-            raise UsageError("Missing parameters")
+            raise UsageError("Missing parameters.")
         elif len(kwargs) > 1 and specified > 1:
-            raise UsageError("Too many parameters")
+            raise UsageError("Too many parameters.")
         func(**kwargs)
     return wrapper
 
@@ -26,18 +26,18 @@ def get_context(command, parameters):
 @click.argument("names", nargs=-1)
 @validate_parameters
 def add(names):
-    """ Add new tasks to the list """
+    """ Add new tasks to the list. """
     response_data = Tasks().add_items(names)
     response = Response(response_data)
     response.show()
 
 @click.command()
 @click.argument("names", nargs=-1)
-@click.option("-a", "--all", "all_tasks", is_flag=True, default=False)
-@click.option("-d", "--done", "done_tasks", is_flag=True, default=False)
+@click.option("-a", "--all", "all_tasks", is_flag=True, default=False, help="Select all existing tasks.")
+@click.option("-d", "--done", "done_tasks", is_flag=True, default=False, help="Select all done tasks.")
 @validate_parameters
 def remove(names, all_tasks, done_tasks):
-    """ Removes existing tasks from the list """
+    """ Remove tasks from the list. """
     context = get_context("remove", locals())
     if all_tasks:
         response_data = Tasks().remove_all_items()
@@ -50,10 +50,10 @@ def remove(names, all_tasks, done_tasks):
 
 @click.command()
 @click.argument("names", nargs=-1)
-@click.option("-a", "--all", "all_tasks", is_flag=True, default=False)
+@click.option("-a", "--all", "all_tasks", is_flag=True, default=False, help="Select all existing tasks.")
 @validate_parameters
 def done(names, all_tasks):
-    """ Sets task's status as complete """
+    """ Set task's status as done. """
     context = get_context("done", locals())
     if all_tasks:
         response_data = Tasks().mark_all_items_done()
@@ -64,10 +64,10 @@ def done(names, all_tasks):
 
 @click.command()
 @click.argument("names", nargs=-1)
-@click.option("-a", "--all", "all_tasks", is_flag=True, default=False)
+@click.option("-a", "--all", "all_tasks", is_flag=True, default=False, help="Select all existing tasks.")
 @validate_parameters
 def undone(names, all_tasks):
-    """ Sets task's status as not complete """
+    """ Set task's status as not done. """
     context = get_context("undone", locals())
     if all_tasks:
         response_data = Tasks().mark_all_items_not_done()

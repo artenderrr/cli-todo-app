@@ -9,12 +9,12 @@ def show_tasks():
         for task in tasks:
             click.echo(f"[{"x" if task["done"] else " "}] {task["name"]}")
     else:
-        click.echo("You have no todos yet.")
+        click.echo("You don't have any tasks yet.")
 
 @click.group(invoke_without_command=True)
 @click.pass_context
 def cli(ctx):
-    """ Entry point of application """
+    """ Show task list. """
     if not ctx.invoked_subcommand:
         show_tasks()
 

@@ -72,6 +72,14 @@ todos done -a       # Short form of --all
 ```
 * **Note**: The flags `-a` and `--all` can also be used with the `todos undone` command to mark all tasks as undone.
 
+## Getting Help
+You can always get help by using `--help` flag with any existing command.
+```bash
+todos --help        # Show list of available commands
+
+todos remove --help # Show usage for specific command
+```
+
 # License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
