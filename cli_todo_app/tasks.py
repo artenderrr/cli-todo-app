@@ -1,6 +1,7 @@
 import os
 import json
 from json.decoder import JSONDecodeError
+from cli_todo_app.vacant_ids import VacantIDs
 
 class Tasks:
     def __init__(self):
@@ -42,11 +43,14 @@ class Tasks:
         # item should be dictionary
         if not isinstance(item, dict):
             return False
-        # item should contain only two key-value pairs
-        if not len(item.items()) == 2:
+        # item should contain only three key-value pairs
+        if not len(item.items()) == 3:
             return False
-        # item should contain "name" and "done" keys
-        if "name" not in item or "done" not in item:
+        # item should contain "id", "name" and "done" keys
+        if not all(key in item for key in ("id", "name", "done")):
+            return False
+        # value of "id" should be integer
+        if not isinstance(item["id"], int):
             return False
         # value of "name" should be string
         if not isinstance(item["name"], str):
@@ -65,6 +69,7 @@ class Tasks:
         """ Adds new task with the given name to the list if the name is unique and returns completion status """
         if not self.has_item_with_name(name):
             new_task = {
+                "id": VacantIDs().get_vacant_id(),
                 "name": name,
                 "done": False
             }
@@ -90,6 +95,7 @@ class Tasks:
         if self.has_item_with_name(name):
             for i in range(len(self.items)):
                 if self.items[i]["name"] == name:
+                    VacantIDs().add_vacant_id(self.items[i]["id"])
                     self.items.pop(i)
                     break
             self.dump_items()
