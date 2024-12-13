@@ -44,3 +44,7 @@ class VacantIDs:
     def add_vacant_id(self, vacant_id):
         self.items.append(vacant_id)
         self.dump_items()
+
+    def clear_vacant_ids(self):
+        self.items = [1]
+        self.dump_items()

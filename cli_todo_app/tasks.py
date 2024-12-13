@@ -113,6 +113,7 @@ class Tasks:
     def remove_all_items(self):
         """ Removes all tasks using .remote_items() and returns Response object """
         response = self.remove_items(self.all_item_names)
+        VacantIDs().clear_vacant_ids()
         return response
     
     def remove_done_items(self):
