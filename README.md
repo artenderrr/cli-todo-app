@@ -56,6 +56,17 @@ todos remove "Code" "Eat"
 ```
 * **Note**: You can manage as many tasks at the same time as you want!
 
+## Managing Tasks By IDs
+To speed up interaction with this app you can use unique task IDs to manage specific tasks.
+```bash
+todos done 4
+
+todos undone 2 6 24 120
+
+todos remove 3 5 8 13 21
+```
+* **Note**: You can find task IDs in the `todos` command output, specifically in the grey parentheses to the right of each task name.
+
 ## Managing Tasks Using Flags
 ```bash
 todos remove --all  # Remove all tasks

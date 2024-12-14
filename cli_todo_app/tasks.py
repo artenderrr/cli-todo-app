@@ -1,6 +1,7 @@
 import os
 import json
 from json.decoder import JSONDecodeError
+from cli_todo_app.vacant_ids import VacantIDs
 
 class Tasks:
     def __init__(self):
@@ -42,11 +43,14 @@ class Tasks:
         # item should be dictionary
         if not isinstance(item, dict):
             return False
-        # item should contain only two key-value pairs
-        if not len(item.items()) == 2:
+        # item should contain only three key-value pairs
+        if not len(item.items()) == 3:
             return False
-        # item should contain "name" and "done" keys
-        if "name" not in item or "done" not in item:
+        # item should contain "id", "name" and "done" keys
+        if not all(key in item for key in ("id", "name", "done")):
+            return False
+        # value of "id" should be integer
+        if not isinstance(item["id"], int):
             return False
         # value of "name" should be string
         if not isinstance(item["name"], str):
@@ -55,6 +59,17 @@ class Tasks:
         if not isinstance(item["done"], bool):
             return False
         return True
+    
+    @staticmethod
+    def get_valid_task_names(names):
+        valid_task_names = set()
+        invalid_task_names = set()
+        for name in names:
+            if name.isdigit():
+                invalid_task_names.add(name)
+            else:
+                valid_task_names.add(name)
+        return [*valid_task_names], [*invalid_task_names]
     
     def dump_items(self):
         """ Dumps tasks to the file """
@@ -65,6 +80,7 @@ class Tasks:
         """ Adds new task with the given name to the list if the name is unique and returns completion status """
         if not self.has_item_with_name(name):
             new_task = {
+                "id": VacantIDs().get_vacant_id(),
                 "name": name,
                 "done": False
             }
@@ -76,7 +92,8 @@ class Tasks:
     def add_items(self, names):
         """ Adds new tasks using .add_item() for each name from given ones and returns response with metadata """
         response = {"added": [], "already exist": []}
-        for name in set(names):
+        names, response["invalid names"] = Tasks.get_valid_task_names(names)
+        for name in names:
             success = self.add_item(name)
             response["added" if success else "already exist"].append(name)
         return response
@@ -90,16 +107,38 @@ class Tasks:
         if self.has_item_with_name(name):
             for i in range(len(self.items)):
                 if self.items[i]["name"] == name:
+                    VacantIDs().add_vacant_id(self.items[i]["id"])
                     self.items.pop(i)
                     break
             self.dump_items()
             return True
         return False
     
+    def get_task_name_by_id(self, task_id):
+        """ Returns task name by its ID if task with such ID exists, else None """
+        return next((task["name"] for task in self.items if task["id"] == task_id), None)
+    
+    def get_names_with_ids_replaced(self, names):
+        """ Replaces IDs with actual task names, removes duplicate task names or IDs and returns result and IDs that are nonexistent (if present) """
+        names_with_ids_replaced = set()
+        nonexistent_ids = set()
+        for name in names:
+            if name.isdigit(): # this means that current 'name' contains ID
+                task_id = int(name)
+                name_from_id = self.get_task_name_by_id(task_id)
+                if name_from_id:
+                    names_with_ids_replaced.add(name_from_id)
+                else:
+                    nonexistent_ids.add(name)
+            else:
+                names_with_ids_replaced.add(name)
+        return [*names_with_ids_replaced], [*nonexistent_ids]
+    
     def remove_items(self, names):
         """ Removes tasks using .remove_item() for each name from given ones and returns Response object """
         response = {"removed": [], "don't exist": []}
-        for name in set(names):
+        names, response["nonexistent ids"] = self.get_names_with_ids_replaced(names)
+        for name in names:
             success = self.remove_item(name)
             response["removed" if success else "don't exist"].append(name)
         return response
@@ -107,6 +146,7 @@ class Tasks:
     def remove_all_items(self):
         """ Removes all tasks using .remote_items() and returns Response object """
         response = self.remove_items(self.all_item_names)
+        VacantIDs().clear_vacant_ids()
         return response
     
     def remove_done_items(self):
@@ -131,7 +171,8 @@ class Tasks:
     def mark_items_done(self, names):
         """ Marks tasks as done using .mark_item_done() for each name from given ones and returns Response object"""
         response = {"done": [], "already done": [], "don't exist": []}
-        for name in set(names):
+        names, response["nonexistent ids"] = self.get_names_with_ids_replaced(names)
+        for name in names:
             status = self.mark_item_done(name)
             response[status].append(name)
         return response
@@ -157,7 +198,8 @@ class Tasks:
     def mark_items_not_done(self, names):
         """ Marks tasks as not done using .mark_item_not_done() for each name from given ones and returns Response object"""
         response = {"undone": [], "already undone": [], "don't exist": []}
-        for name in set(names):
+        names, response["nonexistent ids"] = self.get_names_with_ids_replaced(names)
+        for name in names:
             status = self.mark_item_not_done(name)
             response[status].append(name)
         return response

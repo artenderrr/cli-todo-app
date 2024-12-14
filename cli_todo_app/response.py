@@ -49,12 +49,14 @@ class ResponseBlock:
             "already exist": ("This task already exists", "These tasks already exist"),
             "don't exist": ("This task doesn't exist", "These tasks don't exist"),
             "already done": ("This task is already done", "These tasks are already done"),
-            "already undone": ("This task is not done yet", "These tasks are not done yet")
+            "already undone": ("This task is not done yet", "These tasks are not done yet"),
+            "nonexistent ids": ("Task with this ID doesn't exist", "Tasks with these IDs don't exist"),
+            "invalid names": ("This task name is not valid", "These task names are not valid")
         }
         self.COLORS = {
             "green": ("added", "removed", "done", "undone"),
             "yellow": ("already done", "already undone"),
-            "red": ("already exist", "don't exist")
+            "red": ("already exist", "don't exist", "nonexistent ids", "invalid names")
         }
     
     def show(self):
@@ -64,7 +66,7 @@ class ResponseBlock:
 
     def show_tasks(self):
         for task in sorted(self.tasks):
-            click.secho(" " * 4 + task, fg=self.color)
+            click.secho(f"↪ {task}", fg=self.color)
 
     @property
     def header(self):
