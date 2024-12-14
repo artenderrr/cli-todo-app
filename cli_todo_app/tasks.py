@@ -60,6 +60,17 @@ class Tasks:
             return False
         return True
     
+    @staticmethod
+    def get_valid_task_names(names):
+        valid_task_names = set()
+        invalid_task_names = set()
+        for name in names:
+            if name.isdigit():
+                invalid_task_names.add(name)
+            else:
+                valid_task_names.add(name)
+        return [*valid_task_names], [*invalid_task_names]
+    
     def dump_items(self):
         """ Dumps tasks to the file """
         with open(self.file_path, "w") as f:
@@ -81,7 +92,8 @@ class Tasks:
     def add_items(self, names):
         """ Adds new tasks using .add_item() for each name from given ones and returns response with metadata """
         response = {"added": [], "already exist": []}
-        for name in set(names):
+        names, response["invalid names"] = Tasks.get_valid_task_names(names)
+        for name in names:
             success = self.add_item(name)
             response["added" if success else "already exist"].append(name)
         return response

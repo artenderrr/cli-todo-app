@@ -50,12 +50,13 @@ class ResponseBlock:
             "don't exist": ("This task doesn't exist", "These tasks don't exist"),
             "already done": ("This task is already done", "These tasks are already done"),
             "already undone": ("This task is not done yet", "These tasks are not done yet"),
-            "nonexistent ids": ("Task with this ID doesn't exist", "Tasks with these IDs don't exist")
+            "nonexistent ids": ("Task with this ID doesn't exist", "Tasks with these IDs don't exist"),
+            "invalid names": ("This task name is not valid", "These task names are not valid")
         }
         self.COLORS = {
             "green": ("added", "removed", "done", "undone"),
             "yellow": ("already done", "already undone"),
-            "red": ("already exist", "don't exist", "nonexistent ids")
+            "red": ("already exist", "don't exist", "nonexistent ids", "invalid names")
         }
     
     def show(self):
