@@ -102,10 +102,31 @@ class Tasks:
             return True
         return False
     
+    def get_task_name_by_id(self, task_id):
+        """ Returns task name by its ID if task with such ID exists, else None """
+        return next((task["name"] for task in self.items if task["id"] == task_id), None)
+    
+    def get_names_with_ids_replaced(self, names):
+        """ Replaces IDs with actual task names, removes duplicate task names or IDs and returns result and IDs that are nonexistent (if present) """
+        names_with_ids_replaced = set()
+        nonexistent_ids = set()
+        for name in names:
+            if name.isdigit(): # this means that current 'name' contains ID
+                task_id = int(name)
+                name_from_id = self.get_task_name_by_id(task_id)
+                if name_from_id:
+                    names_with_ids_replaced.add(name_from_id)
+                else:
+                    nonexistent_ids.add(name)
+            else:
+                names_with_ids_replaced.add(name)
+        return [*names_with_ids_replaced], [*nonexistent_ids]
+    
     def remove_items(self, names):
         """ Removes tasks using .remove_item() for each name from given ones and returns Response object """
         response = {"removed": [], "don't exist": []}
-        for name in set(names):
+        names, response["nonexistent ids"] = self.get_names_with_ids_replaced(names)
+        for name in names:
             success = self.remove_item(name)
             response["removed" if success else "don't exist"].append(name)
         return response
