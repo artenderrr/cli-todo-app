@@ -8,12 +8,12 @@ def show_tasks():
     longest_task_name = max((task["name"] for task in tasks), key=len, default="")
     if tasks:
         for task in tasks:
-            status = "x" if task["done"] else " "
+            status = "✔" if task["done"] else " "
             fill = " " * (len(longest_task_name) - len(task["name"]) + 1)
             task_id = click.style(f"({task["id"]})", fg="bright_black")
             click.echo(f"[{status}] {task["name"]}" + fill + task_id)
     else:
-        click.echo("You don't have any tasks yet.")
+        click.secho("You don't have any tasks yet.", fg="bright_black")
 
 @click.group(invoke_without_command=True)
 @click.pass_context

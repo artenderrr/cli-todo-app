@@ -66,7 +66,7 @@ class ResponseBlock:
 
     def show_tasks(self):
         for task in sorted(self.tasks):
-            click.secho(" " * 4 + task, fg=self.color)
+            click.secho(f"↪ {task}", fg=self.color)
 
     @property
     def header(self):
