@@ -159,7 +159,8 @@ class Tasks:
     def mark_items_done(self, names):
         """ Marks tasks as done using .mark_item_done() for each name from given ones and returns Response object"""
         response = {"done": [], "already done": [], "don't exist": []}
-        for name in set(names):
+        names, response["nonexistent ids"] = self.get_names_with_ids_replaced(names)
+        for name in names:
             status = self.mark_item_done(name)
             response[status].append(name)
         return response
@@ -185,7 +186,8 @@ class Tasks:
     def mark_items_not_done(self, names):
         """ Marks tasks as not done using .mark_item_not_done() for each name from given ones and returns Response object"""
         response = {"undone": [], "already undone": [], "don't exist": []}
-        for name in set(names):
+        names, response["nonexistent ids"] = self.get_names_with_ids_replaced(names)
+        for name in names:
             status = self.mark_item_not_done(name)
             response[status].append(name)
         return response
